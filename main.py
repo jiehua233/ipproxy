@@ -15,7 +15,7 @@ def main():
     print "start to work..."
     while True:
         cronhour()
-        if count % 6 == 0:
+        if count % 12 == 0:
             cronday()
             count = 0
 
@@ -24,7 +24,7 @@ def main():
         count += 1
 
         print "goto sleep...."
-        time.sleep(3600)
+        time.sleep(1800)
         print "wake up..."
 
 

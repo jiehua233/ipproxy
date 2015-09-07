@@ -18,4 +18,3 @@
 * [http://cn-proxy.com/archives/218]()
 * [http://cn-proxy.com/]()
 * [http://www.66ip.cn/3.html]()
-* [http://pachong.org/]()

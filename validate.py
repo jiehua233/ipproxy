@@ -33,6 +33,9 @@ class Validate(Base):
                 except Exception, e:
                     print e
 
+            # 只检测高匿名代理ip
+            break
+
     def ping(self):
         # 优先处理高匿名代理
         for i in range(4)[::-1]:
@@ -54,6 +57,8 @@ class Validate(Base):
                 except Exception, e:
                     print e
 
+            # 只检测高匿名代理ip
+            break
 
     def _ping(self, ip_port):
         print "ping: %s" % ip_port
