@@ -20,10 +20,7 @@ class CZ88(Base):
     base = "http://www.cz88.net/proxy/"
 
     def do(self):
-        self.get()
-        self.redis.set("proxy_ip_cz88", json.dumps(self.ips))
-        print len(self.ips)
-        self.ping()
+        self.save("proxy_ip_cz88")
 
     def get(self):
         self._get("index.shtml")
@@ -67,10 +64,7 @@ class KuaiDaiLi(Base):
     base = "http://blog.kuaidaili.com/"
 
     def do(self):
-        self.get()
-        self.redis.set("proxy_ip_kuaidaili", json.dumps(self.ips))
-        print len(self.ips)
-        self.ping()
+        self.save("proxy_ip_kuaidaili")
 
     def get(self):
         r = requests.get(self.base)
@@ -126,10 +120,7 @@ class IP002(Base):
     base = "http://www.ip002.com/"
 
     def do(self):
-        self.get()
-        self.redis.set("proxy_ip_ip002", json.dumps(self.ips))
-        print len(self.ips)
-        self.ping()
+        self.save("proxy_ip_ip002")
 
     def get(self):
         r = requests.get(self.base)

@@ -1,9 +1,9 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-import requests
 import redis
-import time
+import json
+
 
 import sys
 reload(sys)
@@ -27,34 +27,16 @@ class Base:
     redis = None
 
     def __init__(self):
-        pool = redis.ConnectionPool(host="127.0.0.1", port=6379)
+        pool = redis.ConnectionPool(host="127.0.0.1", port=6379, db=1)
         self.redis = redis.StrictRedis(connection_pool=pool)
 
-    def ping(self):
+    def save(self, key):
+        self.get()
+        print len(self.ips)
+        self.redis.set(key, json.dumps(self.ips))
         for ip in self.ips:
-            try:
-                start = time.time()
-                if self._ping(ip["ip"], ip["port"]):
-                    duration = time.time() - start
-                    key = "proxy_ip_ping_%s" % ip["t"]
-                    self.redis.zadd(key, duration, "%s:%s" % (ip["ip"], ip["port"]))
-                    print "done"
-            except Exception, e:
-                print e
+            self.redis.sadd("proxy_ip_%s" % ip["t"], "%s:%s" % (ip["ip"], ip["port"]))
 
-    def _ping(self, ip, port):
-        print "ping: %s:%s" % (ip, port)
-        #url = "http://cn.bing.com"
-        url = "http://www.baidu.com"
-        #url = "http://www.1yyg.com"
-        proxies = {
-            "http": "http://%s:%s" % (ip, port),
-        }
-        try:
-            r = requests.get(url, proxies=proxies, timeout=self.timeout)
-            if r.status_code == requests.codes.ok:
-                return True
-        except Exception, e:
-            print e
+    def get(self):
+        pass
 
-        return False

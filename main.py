@@ -4,7 +4,7 @@
 import time
 from gethour import KuaiDaiLi2, XiCiDaiLi, CNProxy, IP66
 from getday import KuaiDaiLi, CZ88, IP002
-from reflesh import Reflesh
+from validate import Validate
 
 import sys
 reload(sys)
@@ -14,26 +14,21 @@ def main():
     count = 0
     print "start to work..."
     while True:
-        start = time.time()
         cronhour()
-        last = time.time()
-        print "get hour: %s " % (last - start)
-
         if count % 6 == 0:
             cronday()
-            print "get hour: %s " % (time.time() - last)
             count = 0
 
+        validate()
+
         count += 1
+
         print "goto sleep...."
         time.sleep(3600)
         print "wake up..."
 
 
 def cronhour():
-    # 刷新数据
-    reflesh = Reflesh()
-    reflesh.do()
     # 更新数据
     cnproxy = CNProxy()
     cnproxy.do()
@@ -51,6 +46,11 @@ def cronday():
     kuaidaili.do()
     ip002 = IP002()
     ip002.do()
+
+def validate():
+    validate = Validate()
+    validate.reflesh()
+    validate.ping()
 
 
 if __name__ == "__main__":

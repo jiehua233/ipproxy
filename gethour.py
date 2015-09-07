@@ -20,10 +20,7 @@ class KuaiDaiLi2(Base):
     base = "http://www.kuaidaili.com/proxylist/"
 
     def do(self):
-        self.get()
-        self.redis.set("proxy_ip_kuaidaili2", json.dumps(self.ips))
-        print len(self.ips)
-        self.ping()
+        self.save("proxy_ip_kuaidaili2")
 
     def get(self):
         for i in range(1, 11):
@@ -68,10 +65,7 @@ class XiCiDaiLi(Base):
     base = "http://www.xicidaili.com"
 
     def do(self):
-        self.get()
-        self.redis.set("proxy_ip_xicidaili", json.dumps(self.ips))
-        print len(self.ips)
-        self.ping()
+        self.save("proxy_ip_xicidaili")
 
     def get(self):
         for u in ["nn", "nt", "wn", "wt"]:
@@ -124,10 +118,7 @@ class CNProxy(Base):
     base = "http://cn-proxy.com"
 
     def do(self):
-        self.get()
-        self.redis.set("proxy_ip_cnproxy", json.dumps(self.ips))
-        print len(self.ips)
-        self.ping()
+        self.save("proxy_ip_cnproxy")
 
     def get(self):
         self._get(self.base, True)
@@ -185,10 +176,7 @@ class IP66(Base):
     base = "http://www.66ip.cn"
 
     def do(self):
-        self.get()
-        self.redis.set("proxy_ip_66ip", json.dumps(self.ips))
-        print len(self.ips)
-        self.ping()
+        self.save("proxy_ip_66ip")
 
     def get(self):
         for i in range(1, 11):
