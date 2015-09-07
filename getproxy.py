@@ -20,12 +20,27 @@ IP struct:
 class Base:
 
     ips = []
+    timeout = 5
 
     def ping(self):
-        pass
+        for ip in self.ips:
+            if self._ping(ip["ip"], ip["port"]):
+                pass
 
-    def _ping(self):
-        pass
+    def _ping(self, ip, port):
+        url = "http://www.baidu.com"
+        proxies = {
+            "http": "http://%s:%s" % (ip, port),
+        }
+        try:
+            r = requests.get(url, proxies=proxies, timeout=self.timeout)
+            if r.status_code == requests.codes.ok:
+                return True
+        except:
+            pass
+
+        return False
+
 
     def wredis(self, key):
         pass
@@ -79,4 +94,13 @@ def main():
     cz88.get()
 
 if __name__ == "__main__":
-    main()
+    url = "http://cn.bing.com"
+    proxies = {
+        "http": "http://111.13.136.45:80",
+    }
+    r = requests.get(url, proxies=proxies, timeout=300)
+    print r.status_code
+    print r.text
+    if r.status_code == requests.codes.ok:
+        print r.text
+    # main()
