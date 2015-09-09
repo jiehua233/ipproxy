@@ -13,9 +13,13 @@ sys.setdefaultencoding("utf-8")
 
 class Validate(Base):
 
+    # r = [3, 2], 只处理高匿名,匿名代理ip
+    #r = range(4)[::-1]
+    r = [3]
+
     def reflesh(self):
         # 优先处理高匿名代理
-        for i in range(4)[::-1]:
+        for i in self.r:
             key = "proxy_ip_ping_%s" % i
             ips = self.redis.zrange(key, 0, -1)
             print key, len(ips)
@@ -33,12 +37,9 @@ class Validate(Base):
                 except Exception, e:
                     print e
 
-            # 只检测高匿名代理ip
-            break
-
     def ping(self):
         # 优先处理高匿名代理
-        for i in range(4)[::-1]:
+        for i in self.r:
             skey = "proxy_ip_%s" % i
             zkey = "proxy_ip_ping_%s" % i
             ips = self.redis.smembers(skey)
@@ -57,14 +58,11 @@ class Validate(Base):
                 except Exception, e:
                     print e
 
-            # 只检测高匿名代理ip
-            break
-
     def _ping(self, ip_port):
         print "ping: %s" % ip_port
         #url = "http://cn.bing.com"
-        url = "http://www.baidu.com"
-        #url = "http://www.1yyg.com"
+        #url = "http://www.baidu.com"
+        url = "http://www.1yyg.com"
         proxies = {
             "http": "http://%s" % ip_port,
         }

@@ -19,12 +19,12 @@ def main():
             cronday()
             count = 0
 
-        validate()
-
         count += 1
 
+        validate()
+
         print "goto sleep...."
-        time.sleep(1800)
+        time.sleep(600)
         print "wake up..."
 
 
@@ -49,7 +49,9 @@ def cronday():
 
 def validate():
     validate = Validate()
+    print "-----------------start to reflesh--------------------------"
     validate.reflesh()
+    print "------------------start to update-------------------------"
     validate.ping()
 
 
