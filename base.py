@@ -31,11 +31,14 @@ class Base:
         self.redis = redis.StrictRedis(connection_pool=pool)
 
     def save(self, key):
-        self.get()
-        print len(self.ips)
-        self.redis.set(key, json.dumps(self.ips))
-        for ip in self.ips:
-            self.redis.sadd("proxy_ip_%s" % ip["t"], "%s:%s" % (ip["ip"], ip["port"]))
+        try:
+            self.get()
+            print len(self.ips)
+            self.redis.set(key, json.dumps(self.ips))
+            for ip in self.ips:
+                self.redis.sadd("proxy_ip_%s" % ip["t"], "%s:%s" % (ip["ip"], ip["port"]))
+        except Exception, e:
+            print e
 
     def get(self):
         pass
