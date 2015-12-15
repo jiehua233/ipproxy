@@ -13,19 +13,12 @@ class Crawler:
     """ Crawl the public proxy ip from the Internet. """
 
     @classmethod
-    def getdaily():
+    def run():
         proxyip = []
-        for source in [CZ88, KuaiDaiLi, IP002]:
+        for source in [CNProxy, CNProxyForeign, IP66, XiCiDaiLi, KuaiDaiLi2, \
+                       CZ88, KuaiDaiLi, IP002]:
             instance = source()
             proxyip.extend(instance.crawl())
 
         return proxyip
 
-    @classmethod
-    def gethourly():
-        proxyip = []
-        for source in [CNProxy, CNProxyForeign, IP66, XiCiDaiLi, KuaiDaiLi2]:
-            instance = source()
-            proxyip.extend(instance.crawl())
-
-        return proxyip

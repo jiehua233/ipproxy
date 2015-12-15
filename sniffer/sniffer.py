@@ -6,11 +6,9 @@
 # @date     2015-12-15
 #
 
-"""Validate the proxy ip.
-
-"""
 
 class Sniffer:
+    """ Validate the proxy ip. """
 
     def validate(self):
         pass
