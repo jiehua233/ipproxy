@@ -1,10 +1,9 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-import redis
 import json
-
-
+import requests
+from bs4 import BeautifulSoup
 import sys
 reload(sys)
 sys.setdefaultencoding("utf-8")
