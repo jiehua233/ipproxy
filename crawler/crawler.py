@@ -6,11 +6,26 @@
 # @date     2015-12-15
 #
 
-"""Crawl the public proxy ip from the Internet.
-
-"""
+from crawler.daily import CZ88, KuaiDaiLi, IP002
+from crawler.hourly import KuaiDaiLi2, XiCiDaiLi, IP66, CNProxy, CNProxyForeign
 
 class Crawler:
+    """ Crawl the public proxy ip from the Internet. """
 
-    def run(self):
-        pass
+    @classmethod
+    def getdaily():
+        proxyip = []
+        for source in [CZ88, KuaiDaiLi, IP002]:
+            instance = source()
+            proxyip.extend(instance.crawl())
+
+        return proxyip
+
+    @classmethod
+    def gethourly():
+        proxyip = []
+        for source in [CNProxy, CNProxyForeign, IP66, XiCiDaiLi, KuaiDaiLi2]:
+            instance = source()
+            proxyip.extend(instance.crawl())
+
+        return proxyip

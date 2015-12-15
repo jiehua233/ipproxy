@@ -1,10 +1,16 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+#
+# @author   jiehua233@gmail.com
+# @site     http://chenjiehua.me
+# @date     2015-12-15
+#
 
-import json
-import requests
-from bs4 import BeautifulSoup
 import sys
+import requests
+
+from bs4 import BeautifulSoup
+
 reload(sys)
 sys.setdefaultencoding("utf-8")
 
@@ -47,15 +53,4 @@ class Base:
     def parse(self, soup):
         """ 针对不同网站做特化 """
         pass
-
-
-    def save(self, key):
-        try:
-            self.get()
-            print len(self.ips)
-            self.redis.set(key, json.dumps(self.ips))
-            for ip in self.ips:
-                self.redis.sadd("proxy_ip_%s" % ip["t"], "%s:%s" % (ip["ip"], ip["port"]))
-        except Exception, e:
-            print e
 

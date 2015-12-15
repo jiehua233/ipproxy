@@ -1,13 +1,18 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-
-import requests
-import urlparse
-import json
-
-from bs4 import BeautifulSoup
+#
+# @author   jiehua233@gmail.com
+# @site     http://chenjiehua.me
+# @date     2015-12-15
+#
 
 import sys
+import urlparse
+import requests
+
+from bs4 import BeautifulSoup
+from crawler.base import Base
+
 reload(sys)
 sys.setdefaultencoding("utf-8")
 
@@ -32,7 +37,7 @@ class CZ88(Base):
         for s in soup[1:]:
             try:
                 ip = {"type": 1}
-                for idx, vad in enumerate(s.stripped_strings):
+                for idx, val in enumerate(s.stripped_strings):
                     ip[keys[idx]] = val
 
                 result.append(ip)

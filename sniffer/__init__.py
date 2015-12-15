@@ -6,4 +6,4 @@
 # @date     2015-12-15
 #
 
-from crawler.crawler import Crawler
+from sniffer.sniffer import Sniffer

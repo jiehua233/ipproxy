@@ -9,3 +9,8 @@
 """Validate the proxy ip.
 
 """
+
+class Sniffer:
+
+    def validate(self):
+        pass

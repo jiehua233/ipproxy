@@ -6,11 +6,11 @@
 # @date     2015-12-15
 #
 
+import sys
 import urlparse
 
-from base import Base
+from crawler.base import Base
 
-import sys
 reload(sys)
 sys.setdefaultencoding("utf-8")
 
