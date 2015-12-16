@@ -59,8 +59,6 @@ class XiCiDaiLi(Base):
         base = "http://www.xicidaili.com"
         proxyip = []
         headers = {
-            "Host": "www.xicidaili.com",
-            "Referer": "http://www.xicidaili.com",
             "User-Agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/44.0.2403.155 Safari/537.36",
         }
         for u in ["nn", "nt", "wn", "wt"]:
@@ -101,7 +99,7 @@ class XiCiDaiLi(Base):
 class IP66(Base):
     """ www.66ip.cn """
 
-    def get(self):
+    def crawl(self):
         base = "http://www.66ip.cn"
         proxyip = []
         for i in range(1, 11):
@@ -126,6 +124,85 @@ class IP66(Base):
                     ip["type"] = 2
                 elif d[3].string == "高匿代理":
                     ip["type"] = 3
+
+                result.append(ip)
+
+            except Exception as e:
+                print e
+
+        return result
+
+
+class IP66API(Base):
+    """ http://www.66ip.cn/nm.html """
+
+    def crawl(self):
+        proxyip = []
+        for c in range(3):
+            # 普通代理IP
+            pt = "http://www.66ip.cn/mo.php?tqsl=800"
+            proxyip.extend(self.set_type(self.get(pt), 1))
+            # 超级匿名
+            nm = "http://www.66ip.cn/nmtq.php?getnum=800&anonymoustype=4&proxytype=2&api=66ip"
+            proxyip.extend(self.set_type(self.get(nm), 3))
+            for i in range(1, 4):
+                # 透明，普匿，高匿
+                nm = "http://www.66ip.cn/nmtq.php?getnum=800&anonymoustype=%s&proxytype=2&api=66ip" % i
+                proxyip.extend(self.set_type(self.get(nm), i))
+
+        return proxyip
+
+    def parse(self, soup):
+        result = []
+        for d in soup.find('body').contents:
+            try:
+                d = str(d).strip()
+                if d != '' and d[0].isdigit():
+                    ip = {
+                        "ip": d.split(':')[0],
+                        "port": d.split(':')[1],
+                        "info": "",
+                        "type": 0,
+                    }
+                    result.append(ip)
+            except Exception as e:
+                print e
+
+        return result
+
+    def set_type(self, proxyip=[], iptype=0):
+        result = []
+        for ip in proxyip:
+            ip['type'] = iptype
+            result.append(ip)
+
+        return result
+
+
+class IP002(Base):
+    """ http://www.ip002.com/free.html """
+
+    def crawl(self):
+        base = "http://www.ip002.com/free.html"
+        proxyip = self.get(base, encoding="GBK")
+        return proxyip
+
+    def parse(self, soup):
+        result = []
+        s = soup.find("table").find_all("tr")
+        for d in s:
+            try:
+                w = d.find_all("td")
+                ip = {
+                    "ip": w[0].string,
+                    "port": w[1].string,
+                    "info": w[3].string,
+                    "type": 0,
+                }
+                if w[2].string == "透明":
+                    ip['type'] = 1
+                elif w[2].string == "高匿":
+                    ip['type'] = 3
 
                 result.append(ip)
 
@@ -182,10 +259,11 @@ class CNProxyForeign(CNProxy):
             "type": 0,
         }
         if d[2].string == "透明":
-            ip["t"] = 1
+            ip["type"] = 1
         elif d[2].string == "匿名":
-            ip["t"] = 2
+            ip["type"] = 2
         elif d[2].string == "高度匿名":
-            ip["t"] = 3
+            ip["type"] = 3
 
         return ip
+

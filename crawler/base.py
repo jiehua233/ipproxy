@@ -35,7 +35,7 @@ class Base:
     def get(self, url, encoding=None, headers=None):
         print url
         try:
-            r = requests.get(url)
+            r = requests.get(url, headers=headers) if headers else requests.get(url)
             if encoding:
                 r.encoding = encoding
 

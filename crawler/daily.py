@@ -95,35 +95,3 @@ class KuaiDaiLi(Base):
         return result
 
 
-class IP002(Base):
-    """ http://www.ip002.com/ """
-
-    def crawl(self):
-        base = "http://www.ip002.com/"
-        proxyip = []
-        r = requests.get(base)
-        if r.status_code == requests.codes.ok:
-            soup = BeautifulSoup(r.text, "html5lib")
-            for s in soup.find_all("h2", class_="post-title")[:2]:
-                proxyip.extend(self.get(s.find("a")["href"]))
-        else:
-            print "HTTP Response Code: %s" % r.status_code
-
-        return proxyip
-
-    def parse(self, soup):
-        result = []
-        for d in  soup.find("section", class_="post-body").find_all("p"):
-            try:
-                i = d.string.split("#")
-                ip = {
-                    "ip": i[0].split(":")[0],
-                    "port": i[0].split(":")[1],
-                    "info": i[1],
-                    "type": 0,
-                }
-                result.append(ip)
-            except Exception as e:
-                print e
-
-        return result

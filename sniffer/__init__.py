@@ -6,4 +6,9 @@
 # @date     2015-12-15
 #
 
-from sniffer.sniffer import Sniffer
+
+class Sniffer:
+    """ Validate the proxy ip. """
+
+    def validate(self):
+        pass
