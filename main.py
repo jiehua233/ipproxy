@@ -1,59 +1,21 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
+#
+# @author   jiehua233@gmail.com
+# @site     http://chenjiehua.me
+# @date     2015-12-15
+#
 
-import time
-from gethour import KuaiDaiLi2, XiCiDaiLi, CNProxy, IP66
-from getday import KuaiDaiLi, CZ88, IP002
-from validate import Validate
+from crawler import Crawler
+from sniffer import Sniffer
+from etc.logger import logger
 
-import sys
-reload(sys)
-sys.setdefaultencoding("utf-8")
 
 def main():
-    count = 0
-    print "start to work..."
-    while True:
-        cronhour()
-        if count % 12 == 0:
-            cronday()
-            count = 0
-
-        count += 1
-
-        validate()
-
-        print "goto sleep...."
-        time.sleep(600)
-        print "wake up..."
-
-
-def cronhour():
-    # 更新数据
-    cnproxy = CNProxy()
-    cnproxy.do()
-    ip66 = IP66()
-    ip66.do()
-    xicidaili = XiCiDaiLi()
-    xicidaili.do()
-    kuaidaili2 = KuaiDaiLi2()
-    kuaidaili2.do()
-
-def cronday():
-    cz88 = CZ88()
-    cz88.do()
-    kuaidaili = KuaiDaiLi()
-    kuaidaili.do()
-    ip002 = IP002()
-    ip002.do()
-
-def validate():
-    validate = Validate()
-    print "-----------------start to reflesh--------------------------"
-    validate.reflesh()
-    print "------------------start to update-------------------------"
-    validate.ping()
-
+    proxyips = Crawler.run()
+    logger.info('Crawler finish, total ip: %s', len(proxyips))
+    sniffer = Sniffer()
+    sniffer.run(proxyips)
 
 if __name__ == "__main__":
     main()
