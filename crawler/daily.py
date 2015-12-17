@@ -12,6 +12,7 @@ import requests
 
 from bs4 import BeautifulSoup
 from crawler.base import Base
+from etc.logger import logger
 
 reload(sys)
 sys.setdefaultencoding("utf-8")
@@ -36,13 +37,14 @@ class CZ88(Base):
         keys = ["ip", "port", "type", "info"]
         for s in soup[1:]:
             try:
-                ip = {"type": 1}
+                ip = {}
                 for idx, val in enumerate(s.stripped_strings):
                     ip[keys[idx]] = val
 
+                ip['type'] = 1
                 result.append(ip)
             except Exception as e:
-                print e
+                logger.error('CZ88 parse error: %s', e)
 
         return result
 
@@ -60,7 +62,7 @@ class KuaiDaiLi(Base):
                 proxyip.extend(self.get(s.find("a")["href"]))
 
         else:
-            print "HTTP Response Code: %s" % r.status_code
+            logger.error("KuaiDaiLi crawl root fail, HTTP Response Code: %s", r.status_code)
 
         return proxyip
 
@@ -90,7 +92,7 @@ class KuaiDaiLi(Base):
                 result.append(ip)
 
             except Exception, e:
-                print e
+                logger.error('KuaiDaiLi parse error: %s', e)
 
         return result
 

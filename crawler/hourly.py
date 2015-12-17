@@ -10,6 +10,7 @@ import sys
 import urlparse
 
 from crawler.base import Base
+from etc.logger import logger
 
 reload(sys)
 sys.setdefaultencoding("utf-8")
@@ -47,7 +48,7 @@ class KuaiDaiLi2(Base):
                 result.append(ip)
 
             except Exception as e:
-                print e
+                logger.error('KuaiDaiLi2 parse error: %s', e)
 
         return result
 
@@ -91,7 +92,7 @@ class XiCiDaiLi(Base):
                 result.append(ip)
 
             except Exception as e:
-                print e
+                logger.error('XiCiDaiLi parse error: %s', e)
 
         return result
 
@@ -103,7 +104,7 @@ class IP66(Base):
         base = "http://www.66ip.cn"
         proxyip = []
         for i in range(1, 11):
-            proxyip.extend(self.get(urlparse.urljoin(base, "%s.html" % i)))
+            proxyip.extend(self.get(urlparse.urljoin(base, "%s.html" % i), encoding='UTF-8'))
 
         return proxyip
 
@@ -128,7 +129,7 @@ class IP66(Base):
                 result.append(ip)
 
             except Exception as e:
-                print e
+                logger.error('IP66 parse error: %s', e)
 
         return result
 
@@ -166,7 +167,7 @@ class IP66API(Base):
                     }
                     result.append(ip)
             except Exception as e:
-                print e
+                logger.error('IP66API parse error: %s', e)
 
         return result
 
@@ -207,7 +208,7 @@ class IP002(Base):
                 result.append(ip)
 
             except Exception as e:
-                print e
+                logger.error('IP002 parse error: %s', e)
 
         return result
 
@@ -229,7 +230,7 @@ class CNProxy(Base):
                     result.append(ip)
 
                 except Exception as e:
-                    print e
+                    logger.error('CNProxy parse error: %s', e)
 
         return result
 

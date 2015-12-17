@@ -7,11 +7,11 @@
 #
 
 import time
-import logging
 import multiprocessing
 import requests
 import gevent
 from gevent import monkey; monkey.patch_all()
+from etc.logger import logger
 from etc.config import SNIFFER
 
 class Validator:
@@ -19,7 +19,7 @@ class Validator:
     def __init__(self):
         self.target = SNIFFER['TARGET']
         self.timeout = SNIFFER['TIMEOUT']
-        self.process_num = SNIFFER['process_num']
+        self.process_num = SNIFFER['PROCESS_NUM']
         self.thread_num = SNIFFER['THREAD_NUM']
 
     def run_in_multiprocess(self, proxy_list):
@@ -41,8 +41,11 @@ class Validator:
         return result
 
     def partite_proxy(self, proxy_list):
+        if len(proxy_list) == 0:
+            return []
+
         result = []
-        step = len(proxy_list) / self.process_num
+        step = len(proxy_list) / self.process_num + 1
         for i in range(0, len(proxy_list), step):
             result.append(proxy_list[i:i+step])
 
@@ -68,7 +71,6 @@ class Validator:
         return result
 
     def validate(self, ip_port):
-        logging.info("ping: %s" % ip_port)
         proxies = {
             "http": "http://%s" % ip_port,
         }
@@ -76,35 +78,15 @@ class Validator:
             start = time.time()
             r = requests.get(self.target, proxies=proxies, timeout=self.timeout)
             if r.status_code == requests.codes.ok:
-                return True, time.time() - start
+                speed = time.time() - start
+                logger.info('validating %s, success, time:%ss', ip_port, speed)
+                return True, speed
 
         except Exception as e:
-            logging(e)
+            logger.warn("validating %s, fail: %s", ip_port, e)
 
         return False, 0
 
 
 
-
-
-    def ping(self):
-        # 优先处理高匿名代理
-        for i in self.r:
-            skey = "proxy_ip_%s" % i
-            zkey = "proxy_ip_ping_%s" % i
-            ips = self.redis.smembers(skey)
-            print skey, len(ips)
-            for ip in ips:
-                try:
-                    start = time.time()
-                    if self._ping(ip):
-                        duration = time.time() - start
-                        self.redis.zadd(zkey, duration, ip)
-                        print "add to sorted set"
-                    else:
-                        self.redis.srem(skey, ip)
-                        print "del from set"
-
-                except Exception, e:
-                    print e
 

@@ -6,6 +6,7 @@
 # @date     2015-12-15
 #
 
+from etc.logger import logger
 from crawler.daily import CZ88, KuaiDaiLi
 from crawler.hourly import KuaiDaiLi2, XiCiDaiLi, IP66, \
     IP66API, IP002, CNProxy, CNProxyForeign
@@ -17,9 +18,10 @@ class Crawler:
     def run(cls):
         proxyip = []
         for source in [CNProxy, CNProxyForeign, IP66, IP66API, IP002, \
-                       XiCiDaiLi, KuaiDaiLi2, CZ88, KuaiDaiLi, IP002]:
+                       XiCiDaiLi, CZ88, KuaiDaiLi, IP002, KuaiDaiLi2]:
             instance = source()
-            print instance
-            proxyip.extend(instance.crawl())
+            proxyips = instance.crawl()
+            proxyip.extend(proxyips)
+            logger.info('%s crawl ip: %s', source, len(proxyips))
 
         return proxyip

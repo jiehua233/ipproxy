@@ -10,6 +10,7 @@ import sys
 import requests
 
 from bs4 import BeautifulSoup
+from etc.logger import logger
 
 reload(sys)
 sys.setdefaultencoding("utf-8")
@@ -33,7 +34,7 @@ class Base:
         pass
 
     def get(self, url, encoding=None, headers=None):
-        print url
+        logger.info('crawl: %s', url)
         try:
             r = requests.get(url, headers=headers) if headers else requests.get(url)
             if encoding:
@@ -46,7 +47,7 @@ class Base:
                 raise Exception("HTTP Response Code: %s" % r.status_code)
 
         except Exception as e:
-            print e
+            logger.error('Crawl error: %s', e)
 
         return []
 

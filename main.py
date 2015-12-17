@@ -7,14 +7,15 @@
 #
 
 from crawler import Crawler
-from crawler.hourly import IP002, IP66API
+from sniffer import Sniffer
+from etc.logger import logger
 
 
 def main():
-    ip66api = IP66API()
-    proxyip = ip66api.crawl()
-    for ip in proxyip:
-        print ip['ip'], ip['port']
+    proxyips = Crawler.run()
+    logger.info('Crawler finish, total ip: %s', len(proxyips))
+    sniffer = Sniffer()
+    sniffer.run(proxyips)
 
 if __name__ == "__main__":
     main()
