@@ -23,6 +23,7 @@ class Validator:
         self.thread_num = SNIFFER['THREAD_NUM']
 
     def run_in_multiprocess(self, proxy_list):
+        """ 多进程 """
         result_queue = multiprocessing.Queue()
         proxy_partitions = self.partite_proxy(proxy_list)
         process = []
@@ -41,6 +42,7 @@ class Validator:
         return result
 
     def partite_proxy(self, proxy_list):
+        """ 按process_num数对proxy_list进行分块 """
         if len(proxy_list) == 0:
             return []
 
@@ -52,6 +54,7 @@ class Validator:
         return result
 
     def process_with_gevent(self, result_queue, proxy_list):
+        """ 采用gevent进行处理 """
         jobs = [gevent.spawn(self.validate_job, proxy_list) for i in range(self.thread_num)]
         gevent.joinall(jobs)
         result = {}

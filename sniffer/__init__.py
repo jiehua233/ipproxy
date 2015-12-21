@@ -76,7 +76,7 @@ class Sniffer:
                 self.redis.zadd(key, result[proxy_ip], proxy_ip)
 
     def classify(self, proxyip):
-        """ 根据匿名程度对ip进行去重分类 """
+        """ 根据匿名程度对ip进行分类 """
         result = {}
         for i in range(4):
             result.setdefault(i, set())

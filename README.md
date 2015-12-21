@@ -2,31 +2,48 @@
 
 ## 原理说明
 
-通过不断在各大代理IP网站上抓取数据,同时在本地进行代理测试,提取可用的代理IP,并记录其时延,将数据以有序集合保存到redis sorted sets.
+通过在网络上爬取公开的代理ip，同时在本地进行代理测试，提取可用的代理IP，并记录其网络延时,最后将结果保存到文件以及redis zset(可选).
 
-程序定期进行数据刷新,删除过期的代理IP,同时抓取新的数据.
-
-代理IP分为三个匿名等级:高匿, 普匿, 透明; 程序中以3, 2, 1标记, 0:未知;可以通过修改`validate.py`中的`r=[3, 2, 1]`指定抓取等级;
-
-保存在redis中的数据,key: `proxy_ip_ping_3`, `proxy_ip_ping_2`, `proxy_ip_ping_1`;
-
-针对某网站时, 可以修改`validate.py`中`_ping()`的`url`值;
+代理IP分为三个匿名等级：高匿, 普匿, 透明; 程序中以3, 2, 1标记, 0:未知.
 
 ## 使用方法
 
 新建python虚拟环境
 
 ```bash
-$virtualenv ipproxy
-$source ipproxy/bin/activate
-$pip install -r requirements.txt
+$ virtualenv ~/virtualenv/ipproxy
+$ source ~/virtualenv/ipproxy/bin/activate
+$ pip install -r requirements.txt
+```
+
+修改配置文件 `etc/config.py`
+
+```bash
+$ mv etc/config.sample.py etc/config.py
+$ vim etc/config.py
+```
+```py
+SNIFFER = {
+    'PROCESS_NUM': 4,                   # 开启进程数
+    'THREAD_NUM': 500,                  # gevent线程数
+    'PROXY_TYPE': [0, 1, 2, 3],         # 指定代理IP匿名程度
+    'TARGET': 'http://www.baidu.com',   # 测试代理IP的目标
+    'TIMEOUT': 10,                      # 测试延时
+    'OUTPUT': True,                     # 是否将结果输出到文件（`data/`）
+    'BACKEND': 'localhost:6379',        # 是否将结果保存到redis（不保存则为''）
+    'KEY_PREFIX': 'ipproxy:',           # redis key前缀
+}
+
+LOGGER = {
+    "PATH": './ipproxy.log'             # 程序日志
+}
 ```
 
 启动脚本
 
     $python main.py
 
-调用方法
+### 调用方法(redis zset)
 
     参考 `example`
 
