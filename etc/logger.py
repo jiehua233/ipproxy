@@ -12,13 +12,20 @@ from etc.config import LOGGER
 
 def get_logger():
     logger = logging.getLogger('ipproxy')
-    logger.setLevel('DEBUG')
+    logger.setLevel(logging.DEBUG)
     if not logger.handlers:
+        # logging format
         fmt = logging.Formatter('%(asctime)s - %(levelname)s - %(message)s')
+        # filehandler
         fh = logging.FileHandler(LOGGER['PATH'])
-        fh.setLevel('DEBUG')
         fh.setFormatter(fmt)
+        fh.setLevel(logging.DEBUG)
         logger.addHandler(fh)
+        # streamhandler
+        ch = logging.StreamHandler()
+        ch.setFormatter(fmt)
+        ch.setLevel(logging.INFO)
+        logger.addHandler(ch)
 
     return logger
 

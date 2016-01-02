@@ -70,6 +70,7 @@ class Validator:
             is_valid, speed = self.validate(ip_port)
             if is_valid:
                 result[ip_port] = speed
+                logger.info("got an valid ip: %s, time:%s", ip_port, speed)
 
         return result
 
@@ -82,11 +83,11 @@ class Validator:
             r = requests.get(self.target, proxies=proxies, timeout=self.timeout)
             if r.status_code == requests.codes.ok:
                 speed = time.time() - start
-                logger.info('validating %s, success, time:%ss', ip_port, speed)
+                logger.debug('validating %s, success, time:%ss', ip_port, speed)
                 return True, speed
 
         except Exception as e:
-            logger.warn("validating %s, fail: %s", ip_port, e)
+            logger.debug("validating %s, fail: %s", ip_port, e)
 
         return False, 0
 
