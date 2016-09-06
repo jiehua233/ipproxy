@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 #
 # @author:  jiehua233@gmail.com
-# @sitef:   http://chenjiehua.me
+# @site:    http://chenjiehua.me
 # @date:    2016-09-05
 #
 
