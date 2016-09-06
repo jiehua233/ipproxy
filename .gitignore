@@ -1,6 +1,3 @@
 *~
 *pyc
-etc/config.py
-data/*
-!data/README.md 
-ipproxy.log
+*csv
