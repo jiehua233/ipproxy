@@ -3,57 +3,63 @@
 #
 # @author   jiehua233@gmail.com
 # @site     http://chenjiehua.me
-# @date     2015-12-21
+# @date     2016-09-06
 #
 
-"""代理IP使用范例
+"""proxy ip example
 
 """
 
-import redis
+import csv
 import random
 import requests
 
-
-pool = redis.ConnectionPool(host="127.0.0.1", port=6379, db=0)
-r = redis.StrictRedis(connection_pool=pool)
-key = "ipproxy:3"   # 暂时使用高匿名代理
-timeout = 20        # 连接超时
+retrymax = 3
+timeout = 30
+proxycsv = "output.csv"
+target = "http://www.baidu.com"
 
 
 def main():
-    url = "http://www.baidu.com"
-    retries = 0
-    while True:
-        proxies = getproxy(retries + 1)
-        print 'Using proxy:%s' % proxies
+    total_weight, proxyip = load_proxyip(proxycsv)
+    for i in range(retrymax):
+        ip = get_proxyip(total_weight, proxyip)
+        print "Using proxy:", ip
         try:
-            r = requests.get(url, proxies=proxies, timeout=timeout)
-            if r.status_code == requests.codes.OK:
-                print r.text
-                break
+            r = requests.get(target, proxies={"http": "http://" + ip}, timeout=timeout)
+            print "Http resp code:", r.status_code
+            break
 
         except Exception as e:
             print e
 
-        print "fail! and retrying..."
-        retries += 1
-        if retries > 10:
-            print "fail too many times"
-            break
+
+def load_proxyip(fpath):
+    """ proxyip list with weight
+    """
+    total_weight, proxyip = 0, []
+    with open(fpath) as f:
+        csvreader = csv.DictReader(f, restval=0, delimiter=",",
+                                   quotechar="\"", quoting=csv.QUOTE_MINIMAL)
+        for row in csvreader:
+            ip = row["ip"] + ":" + row["port"]
+            weight = 1/float(row["speed"])
+            total_weight += weight
+            proxyip.append((ip, weight))
+
+    return total_weight, proxyip
 
 
-def getproxy(weight):
-    # 根据权重随机获取代理ip, weight : [1...10]
-    # 代理IP在redis中以zset存储, weight越大,ip质量越差
-    total = r.zcard(key)
-    ips = r.zrange(key, 0, total/10*weight)
-    # 获取全部代理IP
-    # ips = r.zrange(key, 0, -1)
-    proxies = {
-        "http": "http://%s" % ips[random.randint(0, len(ips)-1)]
-    }
-    return proxies
+def get_proxyip(total_weight, proxyip):
+    r = random.uniform(0, total_weight)
+    upto = 0
+    for ip, weight in proxyip:
+        if upto + weight >= r:
+            return ip
+        upto += weight
+
+    print "Error: total_weight=%s, random_weight=%s" % (total_weight, r)
+    return "localhost:8888"
 
 
 if __name__ == "__main__":
