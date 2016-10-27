@@ -27,7 +27,7 @@
 
 如果遇到 pypi 下载缓慢，可以使用 douban pypi:
 
-    (ipproxy)$ pip install -r Requirements.txt -i http://pypi.douban.com/simple --trusted-host pypi.douban.com
+    (ipproxy)$ pip install -r requirements.txt -i http://pypi.douban.com/simple --trusted-host pypi.douban.com
 
 ### 提取代理IP
 
@@ -93,7 +93,7 @@ optional arguments:
 为了提高筛选的速度，我们采用了多进程/多线程的方式并发处理，`worker` 代表进程数，
 `thread` 代表线程数；`timeout` 代表请求超时时间（秒）；`target` 代表目标网站。
 
-筛选高度匿名的代理IP：
+比如，我们想要筛选高度匿名的代理IP：
 
     (ipproxy)$ python check.py data/high_anonymous.csv
 
@@ -126,6 +126,6 @@ ip,port,anonymous,info,speed
 * [http://www.66ip.cn]()
 
 
-## License
+## 版权
 
-Just enjoy it.
+没时间解释了，快上车 (⊙﹏⊙)b
