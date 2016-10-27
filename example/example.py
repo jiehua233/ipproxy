@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 #
 # @author   jiehua233@gmail.com
-# @site     http://chenjiehua.me
+# @site     https://chenjiehua.me
 # @date     2016-09-06
 #
 
@@ -16,7 +16,7 @@ import requests
 
 retrymax = 3
 timeout = 30
-proxycsv = "output.csv"
+proxycsv = "proxyip.csv"
 target = "http://www.baidu.com"
 
 

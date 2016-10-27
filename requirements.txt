@@ -1,2 +1,5 @@
-gevent==1.1.2
-requests==2.11.1
+gevent>=1.1.2
+requests>=2.11.1
+17MonIP>=0.2.7
+beautifulsoup4>=4.5.1
+html5lib>=0.999999999
